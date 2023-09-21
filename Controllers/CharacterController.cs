@@ -6,27 +6,29 @@ namespace test.Controllers
     [Route("api/[controller]")]
     public class CharacterController : ControllerBase
     {
-        private static List<Character> characters = new List<Character> {
-            new Character(), new Character{ Id= 1 ,Name ="Zakaria"}
-        };
+        private readonly ICharacterService _characterService;
+
+        public CharacterController(ICharacterService characterService)
+        {
+            _characterService = characterService;
+        }
 
         [HttpGet("getAll")]
         public ActionResult<List<Character>> Get() 
         {
-            return Ok(characters);
+            return Ok(_characterService.GetAllCharacters());
         }
 
         [HttpGet("{id}")]
         public ActionResult<Character> GetSingle(int id) 
         {
-            return Ok(characters.FirstOrDefault(c=>c.Id == id));
+            return Ok(_characterService.GetCharacterById(id));
         }
 
         [HttpPost]
         public ActionResult<List<Character>> AddCharacter(Character newCharacter)
         {
-            characters.Add(newCharacter);
-            return Ok(characters);
+            return Ok(_characterService.AddCharacter(newCharacter));
         }
     }
 }
